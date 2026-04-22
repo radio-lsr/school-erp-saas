@@ -1,0 +1,12 @@
+DROP TABLE IF EXISTS payments;
+DROP TABLE IF EXISTS invoices;
+DROP TABLE IF EXISTS fee_installments;
+DROP TABLE IF EXISTS fee_structures;
+DROP TABLE IF EXISTS enrollments;
+DROP TABLE IF EXISTS students;
+DROP TABLE IF EXISTS sections;
+DROP TABLE IF EXISTS grade_levels;
+DROP TABLE IF EXISTS academic_years;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS tenants;
+DROP EXTENSION IF EXISTS "uuid-ossp";
