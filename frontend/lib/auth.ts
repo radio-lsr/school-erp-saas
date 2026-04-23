@@ -11,20 +11,14 @@ interface User {
 
 export const auth = {
   setToken: (token: string) => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem(TOKEN_KEY, token);
-    }
+    if (typeof window !== "undefined") localStorage.setItem(TOKEN_KEY, token);
   },
   getToken: (): string | null => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem(TOKEN_KEY);
-    }
+    if (typeof window !== "undefined") return localStorage.getItem(TOKEN_KEY);
     return null;
   },
   setUser: (user: User) => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem(USER_KEY, JSON.stringify(user));
-    }
+    if (typeof window !== "undefined") localStorage.setItem(USER_KEY, JSON.stringify(user));
   },
   getUser: (): User | null => {
     if (typeof window !== "undefined") {
@@ -33,9 +27,7 @@ export const auth = {
     }
     return null;
   },
-  isAuthenticated: (): boolean => {
-    return !!auth.getToken();
-  },
+  isAuthenticated: (): boolean => !!auth.getToken(),
   logout: () => {
     if (typeof window !== "undefined") {
       localStorage.removeItem(TOKEN_KEY);
@@ -60,10 +52,7 @@ export const auth = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
-    if (!res.ok) {
-      const err = await res.text();
-      throw new Error(err);
-    }
+    if (!res.ok) throw new Error(await res.text());
     return res.json();
   },
 };
