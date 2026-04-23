@@ -3,7 +3,6 @@ package repository
 import (
     "context"
     "errors"
-
     "github.com/google/uuid"
     "github.com/jackc/pgx/v5"
     "github.com/jackc/pgx/v5/pgxpool"
@@ -24,8 +23,7 @@ func (r *PostgresSectionRepository) Create(ctx context.Context, section *academi
               VALUES ($1, $2, $3, $4, $5, $6, $7)`
     _, err := r.db.Exec(ctx, query,
         section.ID, section.TenantID, section.GradeLevelID, section.AcademicYearID,
-        section.Name, section.Capacity, section.HomeroomTeacherID,
-    )
+        section.Name, section.Capacity, section.HomeroomTeacherID)
     return err
 }
 
@@ -55,8 +53,7 @@ func (r *PostgresSectionRepository) ListByTenant(ctx context.Context, tenantID u
     var sections []*academic.Section
     for rows.Next() {
         var s academic.Section
-        err := rows.Scan(&s.ID, &s.TenantID, &s.GradeLevelID, &s.AcademicYearID, &s.Name, &s.Capacity, &s.HomeroomTeacherID, &s.CreatedAt, &s.UpdatedAt)
-        if err != nil {
+        if err := rows.Scan(&s.ID, &s.TenantID, &s.GradeLevelID, &s.AcademicYearID, &s.Name, &s.Capacity, &s.HomeroomTeacherID, &s.CreatedAt, &s.UpdatedAt); err != nil {
             return nil, err
         }
         sections = append(sections, &s)

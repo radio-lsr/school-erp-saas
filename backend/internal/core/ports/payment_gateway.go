@@ -11,12 +11,12 @@ type PaymentGateway interface {
 }
 
 type PaymentRequest struct {
-    Amount       decimal.Decimal
-    Currency     string
-    PhoneNumber  string
-    Description  string
-    Reference    string
-    CallbackURL  string
+    Amount      decimal.Decimal
+    Currency    string
+    PhoneNumber string
+    Description string
+    Reference   string
+    CallbackURL string
 }
 
 type PaymentResponse struct {
@@ -27,7 +27,7 @@ type PaymentResponse struct {
 
 type PaymentStatus struct {
     TransactionID string
-    Status        string // "pending", "success", "failed"
+    Status        string
     Amount        decimal.Decimal
     Currency      string
 }

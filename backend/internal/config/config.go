@@ -1,8 +1,6 @@
 package config
 
-import (
-    "os"
-)
+import "os"
 
 type Config struct {
     Port        string
@@ -15,7 +13,7 @@ func Load() *Config {
     return &Config{
         Port:        getEnv("PORT", "8080"),
         DatabaseURL: getEnv("DATABASE_URL", "postgres://erp:erp123@localhost:5432/school_erp?sslmode=disable"),
-        JWTSecret:   getEnv("JWT_SECRET", "votre_secret_jwt_super_securise"),
+        JWTSecret:   getEnv("JWT_SECRET", "secret"),
         RedisURL:    getEnv("REDIS_URL", "localhost:6379"),
     }
 }

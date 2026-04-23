@@ -3,13 +3,12 @@ package services
 import (
     "context"
     "fmt"
-
     "github.com/google/uuid"
 )
 
-// InvoiceGenerationService sera développé plus tard.
-// Pour l'instant, il fournit juste une structure vide pour satisfaire les imports dans app.go.
-type InvoiceGenerationService struct{}
+type InvoiceGenerationService struct {
+    // Les repositories seront injectés plus tard
+}
 
 func NewInvoiceGenerationService() *InvoiceGenerationService {
     return &InvoiceGenerationService{}

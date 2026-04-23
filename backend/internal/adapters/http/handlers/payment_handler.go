@@ -3,29 +3,54 @@ package handlers
 import (
     "encoding/json"
     "net/http"
-
-    "github.com/radio-lsr/school-erp-saas/backend/internal/app"
+    "github.com/go-chi/chi/v5"
+    "github.com/google/uuid"
+    "github.com/radio-lsr/school-erp-saas/backend/internal/core/services"
+    "github.com/shopspring/decimal"
+    "github.com/radio-lsr/school-erp-saas/backend/internal/core/domain/financial"
 )
 
 type PaymentHandler struct {
-    app *app.Application
+    service *services.PaymentService
 }
 
-func NewPaymentHandler(app *app.Application) *PaymentHandler {
-    return &PaymentHandler{app: app}
+func NewPaymentHandler(service *services.PaymentService) *PaymentHandler {
+    return &PaymentHandler{service: service}
 }
 
-// InitiatePayment démarre un paiement Mobile Money
-func (h *PaymentHandler) InitiatePayment(w http.ResponseWriter, r *http.Request) {
+func (h *PaymentHandler) AddPayment(w http.ResponseWriter, r *http.Request) {
+    var req struct {
+        InvoiceID     string `json:"invoice_id"`
+        Amount        string `json:"amount"`
+        Currency      string `json:"currency"`
+        PaymentMethod string `json:"payment_method"`
+        Reference     string `json:"reference"`
+    }
+    if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+        http.Error(w, err.Error(), http.StatusBadRequest)
+        return
+    }
+    invoiceID, _ := uuid.Parse(req.InvoiceID)
+    amount, _ := decimal.NewFromString(req.Amount)
+    cmd := services.AddPaymentCommand{
+        InvoiceID:     invoiceID,
+        AmountPaid:    amount,
+        CurrencyPaid:  financial.Currency(req.Currency),
+        PaymentMethod: req.PaymentMethod,
+        Reference:     req.Reference,
+    }
+    payment, err := h.service.AddPayment(r.Context(), cmd)
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusBadRequest)
+        return
+    }
     w.Header().Set("Content-Type", "application/json")
-    w.WriteHeader(http.StatusNotImplemented)
-    json.NewEncoder(w).Encode(map[string]string{
-        "message": "Payment initiation not implemented yet",
-    })
+    w.WriteHeader(http.StatusCreated)
+    json.NewEncoder(w).Encode(payment)
 }
 
-// Callback reçoit les notifications de la passerelle de paiement
-func (h *PaymentHandler) Callback(w http.ResponseWriter, r *http.Request) {
-    w.WriteHeader(http.StatusOK)
-    w.Write([]byte("OK"))
+func (h *PaymentHandler) Routes() chi.Router {
+    r := chi.NewRouter()
+    r.Post("/", h.AddPayment)
+    return r
 }

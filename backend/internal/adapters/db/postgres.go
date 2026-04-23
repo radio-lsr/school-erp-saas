@@ -10,7 +10,6 @@ func NewPostgresConnection(databaseURL string) (*pgxpool.Pool, error) {
     if err != nil {
         return nil, err
     }
-    // Configurer le pool si nécessaire
     pool, err := pgxpool.NewWithConfig(context.Background(), config)
     if err != nil {
         return nil, err
