@@ -27,7 +27,7 @@ func main() {
     if err != nil {
         log.Fatalf("Failed to connect to database: %v", err)
     }
-    defer dbConn.Close(context.Background())
+    defer dbConn.Close()   // <-- correction : pas d'argument
 
     application := app.NewApplication(dbConn, cfg)
 
