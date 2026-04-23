@@ -27,11 +27,14 @@ func NewApplication(db *pgxpool.Pool, cfg *config.Config) *Application {
     paymentRepo := repository.NewPostgresPaymentRepository(db)
     exchangeRateRepo := repository.NewPostgresExchangeRateRepository(db)
 
+    // On ignore pour l'instant les variables non utilisées
+    _, _ = feeStructRepo, feeInstallmentRepo
+
     sectionService := services.NewSectionService(sectionRepo)
     studentService := services.NewStudentService(studentRepo)
     enrollmentService := services.NewEnrollmentService(enrollmentRepo, sectionRepo, studentRepo)
     paymentService := services.NewPaymentService(invoiceRepo, paymentRepo, exchangeRateRepo)
-    invoiceGenService := services.NewInvoiceGenerationService() // no dependencies yet
+    invoiceGenService := services.NewInvoiceGenerationService() // pas encore de dépendances
 
     return &Application{
         Config:            cfg,
