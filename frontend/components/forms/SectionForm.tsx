@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
-import { GradeLevel, AcademicYear } from "@/types";
+import { AcademicYear, GradeLevel } from "@/types";
 
 const sectionSchema = z.object({
   name: z.string().min(1, "Le nom est requis"),
@@ -43,7 +43,8 @@ export function SectionForm({ onSuccess }: SectionFormProps) {
       setGradeLevels(grades);
       setAcademicYears(years);
       if (years.length > 0) {
-        setValue("academicYearId", years.find(y => y.isCurrent)?.id || years[0].id);
+        const defaultYear = years.find((y: AcademicYear) => y.isCurrent) || years[0];
+        setValue("academicYearId", defaultYear.id);
       }
     };
     fetchData();
