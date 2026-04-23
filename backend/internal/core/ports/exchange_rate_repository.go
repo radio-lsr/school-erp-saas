@@ -2,6 +2,7 @@ package ports
 
 import (
     "context"
+    "github.com/shopspring/decimal"
     "github.com/radio-lsr/school-erp-saas/backend/internal/core/domain/financial"
 )
 
