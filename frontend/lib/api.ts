@@ -4,13 +4,41 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
 async function fetchAPI(endpoint: string, options: RequestInit = {}) {
   const token = auth.getToken();
-  const headers: HeadersInit = {
+  
+  // On prépare les headers sous forme d'un objet simple
+  const headers: Record<string, string> = {
     "Content-Type": "application/json",
-    ...options.headers,
   };
-  if (token) headers.Authorization = `Bearer ${token}`;
-  const res = await fetch(`${API_URL}${endpoint}`, { ...options, headers });
-  if (!res.ok) throw new Error(await res.text());
+  
+  // Si des headers supplémentaires sont passés (par exemple via options.headers)
+  if (options.headers) {
+    // On les fusionne (attention : options.headers peut être Headers, string[][] ou Record)
+    // On convertit tout en objet simple pour faciliter la fusion.
+    if (options.headers instanceof Headers) {
+      options.headers.forEach((value, key) => {
+        headers[key] = value;
+      });
+    } else if (Array.isArray(options.headers)) {
+      options.headers.forEach(([key, value]) => {
+        headers[key] = value;
+      });
+    } else {
+      Object.assign(headers, options.headers);
+    }
+  }
+
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  const res = await fetch(`${API_URL}${endpoint}`, {
+    ...options,
+    headers,
+  });
+
+  if (!res.ok) {
+    throw new Error(await res.text());
+  }
   if (res.status === 204) return null;
   return res.json();
 }
