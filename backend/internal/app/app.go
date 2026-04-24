@@ -17,6 +17,7 @@ type Application struct {
 	EnrollmentService *services.EnrollmentService
 	PaymentService    *services.PaymentService
 	InvoiceGenService *services.InvoiceGenerationService
+	InvoiceService    *services.InvoiceService
 }
 
 func NewApplication(db *pgxpool.Pool, cfg *config.Config) *Application {
@@ -38,6 +39,7 @@ func NewApplication(db *pgxpool.Pool, cfg *config.Config) *Application {
 	enrollmentService := services.NewEnrollmentService(enrollmentRepo, sectionRepo, studentRepo)
 	paymentService := services.NewPaymentService(invoiceRepo, paymentRepo, exchangeRateRepo)
 	invoiceGenService := services.NewInvoiceGenerationService() // pas encore de dépendances
+	invoiceService := services.NewInvoiceService(invoiceRepo, feeInstallmentRepo)
 
 	return &Application{
 		Config:            cfg,
@@ -48,5 +50,6 @@ func NewApplication(db *pgxpool.Pool, cfg *config.Config) *Application {
 		EnrollmentService: enrollmentService,
 		PaymentService:    paymentService,
 		InvoiceGenService: invoiceGenService,
+		InvoiceService:    invoiceService,
 	}
 }

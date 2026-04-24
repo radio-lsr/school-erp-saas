@@ -44,8 +44,10 @@ func NewServer(cfg *config.Config, application *app.Application) *http.Server {
 		// Paiements
 		r.Mount("/api/payments", handlers.NewPaymentHandler(application.PaymentService).Routes())
 
-		// Génération de factures (admin)
-		r.Post("/api/invoices/generate", handlers.NewInvoiceHandler(application.InvoiceGenService).GenerateInvoices)
+		// Factures : un seul handler avec les deux services
+		invoiceHandler := handlers.NewInvoiceHandler(application.InvoiceGenService, application.InvoiceService)
+		r.Post("/api/invoices", invoiceHandler.CreateInvoice)
+		r.Post("/api/invoices/generate", invoiceHandler.GenerateInvoices)
 	})
 
 	return &http.Server{

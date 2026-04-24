@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { LogOut, User } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export function Header() {
   const router = useRouter();
@@ -15,11 +16,14 @@ export function Header() {
   };
 
   return (
-    <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6">
+    <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 dark:bg-gray-900 dark:border-gray-700">
       <div className="flex items-center gap-4">
-        <h2 className="text-lg font-medium">Bonjour, {user?.fullName || "Admin"}</h2>
+        <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100">
+          Bonjour, {user?.fullName || "Admin"}
+        </h2>
       </div>
       <div className="flex items-center gap-3">
+        <ThemeToggle />
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <User className="h-4 w-4" />
           <span>{user?.email}</span>
